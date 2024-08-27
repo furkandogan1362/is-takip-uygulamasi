@@ -1,0 +1,199 @@
+/* Profile.css */
+
+.profile-container {
+  width: 500px; /* Sabit genişlik */
+  height: 650px; /* Sabit yükseklik */
+  margin: 50px auto; /* Ekranın ortasında yatayda ortalar */
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Dikeyde ortalar */
+  position: relative; /* Diğer öğelerin yerleşimini kontrol etmek için */
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-header h1 {
+  font-size: 2.2em; /* Yazı boyutunu biraz küçült */
+  color: #333;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+}
+
+.profile-photo-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.profile-photo {
+  width: 160px; /* Fotoğrafın genişliğini arttır */
+  height: 160px; /* Fotoğrafın yüksekliğini arttır */
+  border-radius: 30%;
+  border: 2px solid #ddd;
+  object-fit: cover;
+}
+
+.photo-upload, .cv-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.photo-upload input[type="file"],
+.cv-upload input[type="file"] {
+  display: none; /* Dosya girişi gizlendi */
+}
+
+.upload-button {
+  padding: 10px 20px; /* Butonun iç boşluklarını artır */
+  font-size: 1em;
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Buton ile alan arasında boşluk bırak */
+  text-align: center; /* Metni ortala */
+}
+
+.upload-button:hover {
+  background-color: #0056b3; /* Hover rengi */
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%; /* Tam genişlik */
+}
+
+.profile-item {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%; /* Tam genişlik */
+  align-items: center; /* Yatayda ortalama */
+}
+
+.profile-item:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+
+.profile-label {
+  font-weight: bold;
+  color: #555;
+  flex: 0 0 30%;
+  font-family: 'Arial', sans-serif;
+  font-size: 1em;
+}
+
+.profile-value {
+  color: #333;
+  flex: 1; /* Kalan alanı kapla */
+  font-family: 'Arial', sans-serif;
+  font-size: 1em;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-family: 'Arial', sans-serif;
+  margin-left: 10px;
+}
+
+.status-badge.admin {
+  background-color: #ff5722;
+  color: #fff;
+}
+
+.status-badge.user {
+  background-color: #1E90FF;
+  color: #fff;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  font-size: 1em;
+}
+
+.note-message {
+  color: #e31313;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.9em;
+  margin-top: 15px; /* Mesaj ve buton arasında boşluk bırak */
+}
+
+.no-photo-message {
+  color: #888;
+  font-family: 'Arial', sans-serif;
+  font-size: 1em;
+}
+
+/* Profil sayfası CSS dosyasının geri kalanı aynı kalır */
+
+.cv-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cv-upload .buttons-container {
+  display: flex;
+  gap: 20px; /* Butonlar arasındaki boşluk */
+}
+
+.cv-upload .upload-button, .cv-upload .cv-info .upload-button {
+  padding: 10px 20px;
+  font-size: 1em;
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cv-upload .upload-button:hover, .cv-upload .cv-info .upload-button:hover {
+  background-color: #0056b3;
+}
+
+.cv-upload .note-message {
+  color: #e31313;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.9em;
+  margin-top: 15px; /* Mesaj ve butonlar arasında boşluk bırak */
+  text-align: center;
+}
+
+.cv-upload .cv-info {
+  margin-top: 10px;
+}
+
+.cv-upload .cv-info .upload-button {
+  background-color: #28a745; /* İndirme butonu rengi */
+}
+
+.cv-upload .cv-info .upload-button:hover {
+  background-color: #218838; /* İndirme butonu hover rengi */
+}
+

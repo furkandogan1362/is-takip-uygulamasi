@@ -1,0 +1,64 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: linear-gradient(135deg, #5f5b62, #657a9f); /* Renk geçişi */
+    border-bottom: 1px solid #ddd;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+}
+
+.header-button {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease; /* Geçiş efekti ekleme */
+    border-radius: 5px;
+}
+
+.header-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-button:active {
+    transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
+}
+
+.header-info {
+    display: none;
+    font-size: 14px;
+    color: #ffeb3b;
+    font-weight: bold;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    margin-right: 50px;
+}
+
+.header-button-logout {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 15px;
+    transition: all 0.3s ease; /* Geçiş efekti ekleme */
+}
+
+.header-button-logout:hover {
+    background-color: #d32f2f;
+}
+
+.header-button-logout:active {
+    transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
+}
