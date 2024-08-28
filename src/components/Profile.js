@@ -19,6 +19,7 @@ function Profile() {
         },
       })
       .then(response => {
+        console.log('Profile Data:', response.data); // Burayı kontrol edin
         setUserInfo(response.data);
       })
       .catch(error => {

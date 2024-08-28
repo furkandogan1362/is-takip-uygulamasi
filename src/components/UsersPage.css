@@ -1,0 +1,109 @@
+/* src/components/UsersPage.css */
+
+.users-page {
+    padding: 20px;
+    padding-top: 400px; /* Header'ın yüksekliğine göre ayarlayın */
+    
+    background-color: #f9f9f9;
+    margin-left: 250px; /* Sidemenu genişliği kadar boşluk bırak */
+    margin-right: 200px; /* Sağda boşluk bırak */
+  }
+  
+  .user-container {
+    display: flex;
+    flex-wrap: wrap; /* Satıra sığmayan kullanıcılar bir alt satıra geçer */
+    gap: 20px; /* Kullanıcılar arasındaki boşluk */
+    justify-content: center; /* Kullanıcıları ortalar */
+  }
+  
+  .user-item {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    width: calc(25% - 20px); /* 4 kullanıcı için genişlik hesaplaması, boşlukları da hesaba katar */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Gölge efekti */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .user-item:hover {
+    transform: translateY(-5px); /* Hover efekti: yukarı kaydırma */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Hover efekti: daha belirgin gölge */
+  }
+  
+  
+  .user-item img {
+    width: 100px; /* Sabit genişlik */
+    height: 100px; /* Sabit yükseklik */
+    object-fit: cover; /* Fotoğrafın boyutları alanı kaplamasını sağlar */
+    border-radius: 50%; /* Fotoğrafı yuvarlak yapar */
+    display: block;
+    margin: 0 auto; /* Fotoğrafı ortalar */
+  }
+  
+  .user-info {
+    margin-top: 15px;
+  }
+  
+  .user-info p {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f1f1f1; /* Kutucuk arka plan rengi */
+    border: 1px solid #ddd;
+  }
+  
+  .user-info .id,
+  .user-info .name,
+  .user-info .email {
+    background-color: #fff; /* Diğer kutucuklar için arka plan rengi */
+  }
+  
+  .user-info .cv {
+    background-color: #e0e0e0; /* Daha mat arka plan rengi */
+    border-radius: 5px; /* Kutucuğu yuvarlat */
+    cursor: pointer; /* Tıklanabilir işareti */
+    border: none; /* Sınırları kaldır */
+    padding: 10px; /* İç boşluk */
+    text-align: center; /* Metni ortala */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Geçiş efektleri */
+  }
+  
+  .user-info .cv:hover {
+    background-color: #d0d0d0; /* Hover efekti */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hover efekti: gölge */
+  }
+  
+  .user-info .cv:active {
+    background-color: #b0b0b0; /* Aktif durum efekti */
+  }
+  
+  .cv-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    display: block; /* Linki kutucuk alanına yay */
+  }
+  
+  .cv-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
+  .user-status {
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  .admin .user-status { /* Admin durumu için ayar */
+    background-color: #ffa500; /* Turuncu arka plan rengi */
+    color: #fff; /* Yazı rengi beyaz */
+  }
+  
+  .normal-user .user-status { /* Normal kullanıcı durumu için ayar */
+    background-color: #007bff; /* Mavi arka plan rengi */
+    color: #fff; /* Yazı rengi beyaz */
+  }
+  

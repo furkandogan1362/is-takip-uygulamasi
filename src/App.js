@@ -4,9 +4,10 @@ import LoginForm from './components/LoginForm';
 import Home from './components/Home';
 import Header from './components/Header';
 import Profile from './components/Profile'; // Profile bileşenini ekledik
+import UsersPage from './components/UsersPage'; // Kullanıcılar sayfasını ekledik
+import SideMenu from './components/SideMenu'; // SideMenu bileşenini ekledik
 import './App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,20 +28,27 @@ function App() {
     <Router>
       <div className="App">
         {isLoggedIn && <Header isLoggedIn={isLoggedIn} isAdmin={isAdmin} onLogout={handleLogout} />}
-        <Routes>
-          <Route 
-            path="/" 
-            element={!isLoggedIn ? <LoginForm onLogin={handleLogin} /> : <Navigate to="/home" />} 
-          />
-          <Route 
-            path="/home" 
-            element={isLoggedIn ? <Home isAdmin={isAdmin} onLogout={handleLogout} /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/profile" 
-            element={isLoggedIn ? <Profile /> : <Navigate to="/" />} 
-          /> {/* Profile route ekledik */}
-        </Routes>
+        {isLoggedIn && <SideMenu isAdmin={isAdmin} />}
+        <div className={`main-content ${isLoggedIn && isAdmin ? '' : 'full-width'}`}>
+          <Routes>
+            <Route 
+              path="/" 
+              element={!isLoggedIn ? <LoginForm onLogin={handleLogin} /> : <Navigate to="/home" />} 
+            />
+            <Route 
+              path="/home" 
+              element={isLoggedIn ? <Home isAdmin={isAdmin} onLogout={handleLogout} /> : <Navigate to="/" />} 
+            />
+            <Route 
+              path="/profile" 
+              element={isLoggedIn ? <Profile /> : <Navigate to="/" />} 
+            />
+            <Route 
+              path="/users" 
+              element={isLoggedIn && isAdmin ? <UsersPage /> : <Navigate to="/home" />} 
+            />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

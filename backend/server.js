@@ -101,8 +101,12 @@ app.post('/login', (req, res) => {
 
 // Profil bilgilerini alma
 app.get('/profile', (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
-
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send('Token gerekli');
+  }
+  const token = authHeader.split(' ')[1];
+  
   jwt.verify(token, 'secret_key', (err, decoded) => {
     if (err) {
       return res.status(401).send('Yetkisiz');
@@ -126,7 +130,11 @@ app.get('/profile', (req, res) => {
 
 // Profil fotoğrafı yükleme
 app.post('/upload-profile-photo', upload.single('photo'), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send('Token gerekli');
+  }
+  const token = authHeader.split(' ')[1];
 
   jwt.verify(token, 'secret_key', (err, decoded) => {
     if (err) {
@@ -148,7 +156,11 @@ app.post('/upload-profile-photo', upload.single('photo'), (req, res) => {
 
 // CV yükleme
 app.post('/upload-cv', upload.single('cv'), (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send('Token gerekli');
+  }
+  const token = authHeader.split(' ')[1];
 
   jwt.verify(token, 'secret_key', (err, decoded) => {
     if (err) {
@@ -167,6 +179,34 @@ app.post('/upload-cv', upload.single('cv'), (req, res) => {
     });
   });
 });
+
+// Kullanıcıları listeleme
+app.get('/users', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1]; // Token'ı al
+
+  if (!token) {
+    return res.status(401).send('Token gerekli');
+  }
+
+  // Token'ı doğrula
+  jwt.verify(token, 'secret_key', (err, decoded) => {
+    if (err) {
+      return res.status(401).send('Yetkisiz'); // Yetki hatası
+    }
+
+    // Kullanıcıları veritabanından al
+    const sql = 'SELECT id, name, email, photoUrl, cvUrl, (id = 1) AS isAdmin FROM users'; // Burada admin kontrolü yapılıyor
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error('Veri çekme hatası:', err);
+        return res.status(500).send('Kullanıcılar alınamadı'); // İç sunucu hatası
+      }
+      res.json(results); // Kullanıcıları JSON formatında döndür
+    });
+  });
+});
+
+
 
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda çalışıyor`);

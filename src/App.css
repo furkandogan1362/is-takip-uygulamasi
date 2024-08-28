@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  
 }
 
 .App-logo {
@@ -35,4 +36,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+/* SideMenu ile birlikte main-content stilini ekleyin */
+.main-content {
+  margin-left: 270px; /* SideMenu açıkken içerik alanı */
+  transition: margin-left 0.3s ease; /* Geçiş animasyonu */
+  padding: 10px; /* İçerik alanı için padding */
+}
+
+.side-menu.closed ~ .main-content {
+  margin-left: 20px; /* SideMenu kapalıyken içerik alanı */
+}
+
+.full-width {
+  margin-left: 0;
+  padding: 20px;
 }

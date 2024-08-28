@@ -1,0 +1,77 @@
+/* SideMenu stillerini güncelle */
+.side-menu {
+  width: 250px;
+  background-color: #ffffff; /* Arka plan rengini beyaz olarak değiştirdik */
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  height: calc(100vh - 80px);
+  border-radius: 8px;
+  z-index: 1000;
+  transition: width 0.3s ease, transform 0.3s ease;
+}
+
+.side-menu.closed {
+  width: 50px; /* Menü kapalıyken genişliği azalt */
+}
+
+.side-menu .menu-toggle {
+  position: absolute;
+  top: 10px;
+  right: -30px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.side-menu .menu-toggle:hover {
+  background-color: #b9a9a9;
+}
+
+.side-menu h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.side-menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.side-menu li {
+  margin: 10px 0;
+}
+
+.side-menu a {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 1.2em;
+  display: block;
+  padding: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.side-menu a:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Ana içeriğin stilini ekle */
+.main-content {
+  margin-left: 270px; /* SideMenu açıkken margin ayarla */
+  transition: margin-left 0.3s ease; /* Geçiş animasyonu */
+}
+
+.side-menu.closed ~ .main-content {
+  margin-left: 70px; /* SideMenu kapalıyken margin ayarla */
+}
