@@ -114,7 +114,7 @@ app.get('/profile', (req, res) => {
 
     const userId = decoded.id;
 
-    const sql = 'SELECT name, email, isAdmin, photoUrl, cvUrl FROM users WHERE id = ?';
+    const sql = 'SELECT id, name, email, isAdmin, photoUrl, cvUrl FROM users WHERE id = ?';
     db.query(sql, [userId], (err, results) => {
       if (err) {
         return res.status(500).send('Kullanıcı bilgileri alınamadı');
@@ -123,10 +123,11 @@ app.get('/profile', (req, res) => {
         return res.status(404).send('Kullanıcı bulunamadı');
       }
       
-      res.json(results[0]);
+      res.json(results[0]); // ID'yi de içeren profil bilgilerini gönder
     });
   });
 });
+
 
 // Profil fotoğrafı yükleme
 app.post('/upload-profile-photo', upload.single('photo'), (req, res) => {
@@ -203,6 +204,41 @@ app.get('/users', (req, res) => {
       }
       res.json(results); // Kullanıcıları JSON formatında döndür
     });
+  });
+});
+
+// Görev oluşturma endpoint'i
+app.post('/tasks', (req, res) => {
+  const { title, status, details, createdBy } = req.body;
+
+  if (!title || !status || !details || !createdBy) {
+    return res.status(400).send('Eksik veri gönderildi');
+  }
+
+  const sql = 'INSERT INTO tasks (title, status, created_by, details) VALUES (?, ?, ?, ?)';
+  db.query(sql, [title, status, createdBy, details], (err, result) => {
+    if (err) {
+      console.error('Görev oluşturulurken hata oluştu:', err);
+      return res.status(500).send('Görev oluşturulurken hata oluştu');
+    }
+    res.status(201).send('Görev başarıyla oluşturuldu');
+  });
+});
+
+// Görev oluşturma
+app.post('/tasks', upload.single('image'), (req, res) => {
+  const { title, status, details } = req.body;
+  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  const createdBy = req.user.id; // Kullanıcının ID'si buradan alınır
+
+  const sql = 'INSERT INTO tasks (title, status, created_by, details, imageUrl) VALUES (?, ?, ?, ?, ?)';
+  db.query(sql, [title, status, createdBy, details, imageUrl], (err, result) => {
+    if (err) {
+      console.error('Görev oluşturulurken hata oluştu:', err);
+      res.status(500).send('Görev oluşturulurken hata oluştu');
+    } else {
+      res.status(201).send('Görev başarıyla oluşturuldu');
+    }
   });
 });
 

@@ -1,0 +1,20 @@
+/* CreateTaskButton.css */
+.create-task-button {
+    background-color: #4caf50; /* Yeşil arka plan */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .create-task-button:hover {
+    background-color: #45a049; /* Hover efekti */
+  }
+  
+  .create-task-button:active {
+    transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
+  }
+  
