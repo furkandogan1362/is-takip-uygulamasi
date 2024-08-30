@@ -1,11 +1,14 @@
+// App.js
+
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import Home from './components/Home';
 import Header from './components/Header';
-import Profile from './components/Profile'; // Profile bileşenini ekledik
-import UsersPage from './components/UsersPage'; // Kullanıcılar sayfasını ekledik
-import SideMenu from './components/SideMenu'; // SideMenu bileşenini ekledik
+import Profile from './components/Profile';
+import UsersPage from './components/UsersPage';
+import SideMenu from './components/SideMenu';
+import JobTable from './components/JobTable'; // İş tablosu bileşenini ekledik
 import './App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -46,6 +49,10 @@ function App() {
             <Route 
               path="/users" 
               element={isLoggedIn && isAdmin ? <UsersPage /> : <Navigate to="/home" />} 
+            />
+            <Route 
+              path="/jobs" 
+              element={isLoggedIn ? <JobTable /> : <Navigate to="/" />} 
             />
           </Routes>
         </div>

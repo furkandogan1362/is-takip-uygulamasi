@@ -1,12 +1,13 @@
+// SideMenu.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './SideMenu.css';
 
 function SideMenu({ isAdmin }) {
-  const [isOpen, setIsOpen] = useState(true); // Menü açık mı kapalı mı durumunu kontrol eden state
+  const [isOpen, setIsOpen] = useState(true);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen); // Menünün durumunu değiştir
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -21,6 +22,9 @@ function SideMenu({ isAdmin }) {
               <Link to="/users">Kullanıcılar</Link>
             </div>
           ) : null}
+          <div className="menu-item">
+            <Link to="/jobs">İş Tablosu</Link>
+          </div>
           {/* Diğer menü öğeleri buraya eklenebilir */}
         </>
       )}

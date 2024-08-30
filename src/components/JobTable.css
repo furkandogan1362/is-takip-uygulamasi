@@ -1,0 +1,162 @@
+/* JobTable.css */
+
+.job-table-container {
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.job-table {
+  border-collapse: collapse;
+  width: 100%;
+  position: relative;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  vertical-align: top; /* İçerik üstten hizalanır */
+}
+
+th {
+  background-color: #f5f7fa; /* Hafif gri arka plan rengi */
+  color: #333; /* Koyu gri metin rengi */
+  font-weight: bold; /* Kalın metin */
+  font-size: 14px; /* Metin boyutu */
+  text-transform: uppercase; /* Metni büyük harf yap */
+  letter-spacing: 0.05em; /* Harfler arası boşluk */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #ddd; /* Alt çizgi */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+
+.status-new {
+  background-color: #d0f0c0;
+  color: #2d6a4f;
+}
+
+.status-completed {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-deleted {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.details {
+  max-width: 250px;
+  max-height: 100px; /* Hücre yüksekliğini sınırla */
+  overflow-y: auto; /* Dikey kaydırma çubuğu */
+  overflow-wrap: break-word; /* Uzun kelimeleri sarmalar */
+  word-wrap: break-word; /* Geniş tarayıcı desteği için */
+  white-space: normal; /* Normal sarmalama */
+  padding-right: 10px; /* İçeriğin diğer hücreye taşmaması için boşluk */
+}
+
+.image-button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  margin: 3px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.image-button:hover {
+  background-color: #003d99;
+}
+
+.expand-button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 5px;
+  margin-left: 10px; /* Butonu metinden sağa kaydırır */
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.expand-button:hover {
+  background-color: #003d99;
+}
+
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  font-weight: bold;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  position: relative;
+  max-width: 90%;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 80vh;
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.close-button:hover {
+  background-color: #c0392b;
+}

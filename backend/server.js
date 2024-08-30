@@ -29,8 +29,8 @@ db.connect((err) => {
   console.log('MySQL veritabanına bağlandı');
 });
 
-// Multer konfigürasyonu
-const storage = multer.diskStorage({
+// Multer konfigürasyonu (Profil fotoğrafı ve CV için mevcut)
+const storageProfileCv = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = 'uploads/';
     if (!fs.existsSync(uploadDir)) {
@@ -44,15 +44,43 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + uniqueSuffix + ext);
   }
 });
-const upload = multer({ 
-  storage: storage,
+const uploadProfileCv = multer({ 
+  storage: storageProfileCv,
   fileFilter: (req, file, cb) => {
-    const filetypes = /pdf/;
+    const filetypes = /pdf|jpeg|jpg|png/;
     const mimetype = filetypes.test(file.mimetype);
     if (mimetype || file.fieldname === 'photo') {
       return cb(null, true);
     } else {
-      cb(new Error('Sadece PDF dosyası yükleyebilirsiniz.'));
+      cb(new Error('Geçersiz dosya türü'));
+    }
+  }
+});
+
+// Multer konfigürasyonu (Görevler için)
+const storageTasks = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = 'uploads/tasks/';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, 'task-' + uniqueSuffix + ext);
+  }
+});
+const uploadTasks = multer({ 
+  storage: storageTasks,
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png/;
+    const mimetype = filetypes.test(file.mimetype);
+    if (mimetype) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Sadece JPG, JPEG ve PNG dosyaları yükleyebilirsiniz.'));
     }
   }
 });
@@ -128,9 +156,8 @@ app.get('/profile', (req, res) => {
   });
 });
 
-
 // Profil fotoğrafı yükleme
-app.post('/upload-profile-photo', upload.single('photo'), (req, res) => {
+app.post('/upload-profile-photo', uploadProfileCv.single('photo'), (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).send('Token gerekli');
@@ -156,7 +183,7 @@ app.post('/upload-profile-photo', upload.single('photo'), (req, res) => {
 });
 
 // CV yükleme
-app.post('/upload-cv', upload.single('cv'), (req, res) => {
+app.post('/upload-cv', uploadProfileCv.single('cv'), (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).send('Token gerekli');
@@ -208,15 +235,16 @@ app.get('/users', (req, res) => {
 });
 
 // Görev oluşturma endpoint'i
-app.post('/tasks', (req, res) => {
+app.post('/tasks', uploadTasks.single('image'), (req, res) => {
   const { title, status, details, createdBy } = req.body;
+  const imageUrl = req.file ? `/uploads/tasks/${req.file.filename}` : null;
 
   if (!title || !status || !details || !createdBy) {
     return res.status(400).send('Eksik veri gönderildi');
   }
 
-  const sql = 'INSERT INTO tasks (title, status, created_by, details) VALUES (?, ?, ?, ?)';
-  db.query(sql, [title, status, createdBy, details], (err, result) => {
+  const sql = 'INSERT INTO tasks (title, status, created_by, details, imageUrl) VALUES (?, ?, ?, ?, ?)';
+  db.query(sql, [title, status, createdBy, details, imageUrl], (err, result) => {
     if (err) {
       console.error('Görev oluşturulurken hata oluştu:', err);
       return res.status(500).send('Görev oluşturulurken hata oluştu');
@@ -225,23 +253,50 @@ app.post('/tasks', (req, res) => {
   });
 });
 
-// Görev oluşturma
-app.post('/tasks', upload.single('image'), (req, res) => {
-  const { title, status, details } = req.body;
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-  const createdBy = req.user.id; // Kullanıcının ID'si buradan alınır
 
-  const sql = 'INSERT INTO tasks (title, status, created_by, details, imageUrl) VALUES (?, ?, ?, ?, ?)';
-  db.query(sql, [title, status, createdBy, details, imageUrl], (err, result) => {
+// Görevleri listeleme endpoint'i
+app.get('/tasks', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).send('Token gerekli');
+  }
+
+  jwt.verify(token, 'secret_key', async (err, decoded) => {
     if (err) {
-      console.error('Görev oluşturulurken hata oluştu:', err);
-      res.status(500).send('Görev oluşturulurken hata oluştu');
-    } else {
-      res.status(201).send('Görev başarıyla oluşturuldu');
+      return res.status(401).send('Yetkisiz');
     }
+
+    const sql = 'SELECT * FROM tasks';
+    db.query(sql, async (err, results) => {
+      if (err) {
+        console.error('Veri çekme hatası:', err);
+        return res.status(500).send('Görevler alınamadı');
+      }
+
+      const tasksWithUserInfo = await Promise.all(results.map(async (task) => {
+        const creatorId = task.created_by;
+        const userSql = 'SELECT name FROM users WHERE id = ?';
+        const [userResult] = await db.promise().query(userSql, [creatorId]);
+
+        // Fotoğraf URL'lerini dizi olarak ayır
+        const imageUrl = task.imageUrl ? task.imageUrl.split(',') : [];
+
+        return {
+          id: task.id,
+          title: task.title,
+          status: task.status,
+          creatorName: userResult[0]?.name || 'Bilinmeyen Kullanıcı',
+          createdAt: task.created_at,
+          details: task.details,
+          imageUrl // Fotoğraf URL'lerini ekle
+        };
+      }));
+
+      res.json(tasksWithUserInfo);
+    });
   });
 });
-
 
 
 app.listen(port, () => {

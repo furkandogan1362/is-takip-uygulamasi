@@ -9,6 +9,7 @@ function CreateTaskModal({ isOpen, onClose }) {
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
   const [creationDate, setCreationDate] = useState('');
+  const [image, setImage] = useState(null); // Tek fotoğrafı tutacak state
 
   useEffect(() => {
     if (isOpen) {
@@ -21,7 +22,7 @@ function CreateTaskModal({ isOpen, onClose }) {
             },
           });
           setUserInfo(response.data);
-          setCreationDate(new Date().toLocaleString()); // Tarihi ayarla
+          setCreationDate(new Date().toLocaleString());
         } catch (error) {
           console.error('Kullanıcı bilgileri alınamadı:', error);
           setError('Kullanıcı bilgileri alınamadı');
@@ -31,21 +32,26 @@ function CreateTaskModal({ isOpen, onClose }) {
       fetchUserInfo();
     }
 
-    // ESC tuşuna basıldığında modalı kapatma işleyicisi
     const handleEscKey = (e) => {
       if (e.key === 'Escape') {
         onClose();
       }
     };
 
-    // Olay dinleyicisini ekle
     document.addEventListener('keydown', handleEscKey);
 
-    // Temizlik işlevi
     return () => {
       document.removeEventListener('keydown', handleEscKey);
     };
   }, [isOpen, onClose]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setError(null);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,28 +62,34 @@ function CreateTaskModal({ isOpen, onClose }) {
     }
 
     try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('status', status);
+      formData.append('details', details);
+      formData.append('createdBy', userInfo.id);
+      formData.append('creationDate', creationDate);
+
+      if (image) {
+        formData.append('image', image); // Tek fotoğrafı 'image' olarak gönderiyoruz
+      }
+
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/tasks', {
-        title,
-        status,
-        details,
-        createdBy: userInfo.id, // Kullanıcının ID'sini gönder
-        creationDate, // Tarihi gönder
-      }, {
+      const response = await axios.post('http://localhost:5000/tasks', formData, {
         headers: {
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
         },
       });
 
       console.log('Görev başarıyla oluşturuldu:', response.data);
-      onClose(); // Modalı kapat
+      onClose();
     } catch (error) {
       console.error('Görev oluşturulurken hata oluştu:', error);
       setError('Görev oluşturulurken hata oluştu');
     }
   };
 
-  if (!isOpen) return null; // Modal kapalıysa hiçbir şey render edilmez
+  if (!isOpen) return null;
 
   return (
     <div className={`modal ${isOpen ? 'open' : ''}`}>
@@ -107,6 +119,12 @@ function CreateTaskModal({ isOpen, onClose }) {
             value={details}
             onChange={(e) => setDetails(e.target.value)}
             required
+          />
+          <label>Fotoğraf (1 adet):</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
           />
           <button type="submit">Oluştur</button>
           <button type="button" onClick={onClose}>Kapat</button>
