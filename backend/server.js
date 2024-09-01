@@ -127,6 +127,102 @@ app.post('/login', (req, res) => {
   });
 });
 
+// Kullanıcı silme
+app.delete('/users/:id', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).send('Token gerekli');
+  }
+
+  jwt.verify(token, 'secret_key', (err, decoded) => {
+    if (err || !decoded.isAdmin) {
+      return res.status(403).send('Yetkisiz');
+    }
+
+    const userId = req.params.id;
+
+    const sql = 'DELETE FROM users WHERE id = ?';
+    db.query(sql, [userId], (err, result) => {
+      if (err) {
+        console.error('Kullanıcı silinirken hata oluştu:', err);
+        return res.status(500).send('Kullanıcı silinirken hata oluştu');
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).send('Kullanıcı bulunamadı');
+      }
+
+      res.send('Kullanıcı başarıyla silindi');
+    });
+  });
+});
+
+// İş silme endpoint'i
+app.delete('/tasks/:id', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const taskId = req.params.id;
+
+  if (!token) {
+    return res.status(401).send('Token gerekli');
+  }
+
+  jwt.verify(token, 'secret_key', (err, decoded) => {
+    if (err) {
+      return res.status(403).send('Yetkisiz');
+    }
+
+    const userId = decoded.id; // Token'dan kullanıcının ID'sini al
+
+    // İşin kim tarafından oluşturulduğunu bul
+    const findTaskSql = 'SELECT created_by FROM tasks WHERE id = ?';
+    db.query(findTaskSql, [taskId], (err, results) => {
+      if (err) {
+        return res.status(500).send('İş bulunamadı');
+      }
+
+      if (results.length === 0) {
+        return res.status(404).send('İş bulunamadı');
+      }
+
+      const creatorId = results[0].created_by;
+
+      // Admin veya işin sahibi mi kontrol et
+      if (!decoded.isAdmin && userId !== creatorId) {
+        return res.status(403).send('Sadece kendi oluşturduğunuz işi silebilirsiniz!');
+      }
+
+      // İşin silinmesi
+      const deleteTaskSql = 'DELETE FROM tasks WHERE id = ?';
+      db.query(deleteTaskSql, [taskId], (err) => {
+        if (err) {
+          return res.status(500).send('İş silinirken hata oluştu');
+        }
+
+        // Kullanıcı adını almak için
+        const getUserSql = 'SELECT name FROM users WHERE id = ?';
+        db.query(getUserSql, [creatorId], (err, userResults) => {
+          if (err) {
+            return res.status(500).send('Kullanıcı bilgileri alınamadı');
+          }
+
+          const creatorName = userResults[0]?.name || 'Bilinmeyen Kullanıcı';
+          res.send({
+            message: `${creatorId} idli ${creatorName} kullanıcısının ${taskId} idli işi silinmiştir.`,
+            taskId,
+            creatorId,
+            creatorName
+          });
+        });
+      });
+    });
+  });
+});
+
+
+
+
+
 // Profil bilgilerini alma
 app.get('/profile', (req, res) => {
   const authHeader = req.headers.authorization;
@@ -297,6 +393,7 @@ app.get('/tasks', (req, res) => {
     });
   });
 });
+
 
 
 app.listen(port, () => {

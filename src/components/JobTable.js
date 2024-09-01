@@ -5,7 +5,8 @@ import './JobTable.css';
 function JobTable() {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
-  const [expandedJobId, setExpandedJobId] = useState(null); // Hangi işin detayının genişletildiğini tutacak state
+  const [expandedJobId, setExpandedJobId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -16,7 +17,8 @@ function JobTable() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setJobs(response.data);
+        const sortedJobs = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setJobs(sortedJobs);
       } catch (error) {
         console.error('İş tablosu verileri alınamadı:', error);
         setError('İş tablosu verileri alınamadı');
@@ -27,22 +29,60 @@ function JobTable() {
   }, []);
 
   const handleImageClick = (imageUrl) => {
-    window.open(`http://localhost:5000${imageUrl}`, '_blank'); // Fotoğrafı yeni sekmede aç
+    window.open(`http://localhost:5000${imageUrl}`, '_blank');
   };
 
-  // Detayları genişletmek ve daraltmak için kullanılan fonksiyon
   const toggleExpand = (jobId) => {
-    if (expandedJobId === jobId) {
-      setExpandedJobId(null); // Aynı iş tıklanırsa daralt
-    } else {
-      setExpandedJobId(jobId); // Yeni iş tıklanırsa genişlet
+    setExpandedJobId(expandedJobId === jobId ? null : jobId);
+  };
+
+  const handleDeleteJob = async (job) => {
+    if (window.confirm('İşi silmek istediğinizden emin misiniz?')) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`http://localhost:5000/tasks/${job.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setSuccessMessage(response.data.message);
+        setJobs(jobs.filter(j => j.id !== job.id));
+
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          setError('Sadece kendi oluşturduğunuz işi silebilirsiniz!');
+          const errorElement = document.querySelector('.error-message');
+          if (errorElement) {
+            errorElement.classList.add('show');
+            setTimeout(() => {
+              errorElement.classList.remove('show');
+            }, 5000);
+          }
+        } else {
+          console.error('İş silinirken hata oluştu:', error);
+          setError('İş silinirken hata oluştu');
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
+        }
+      }
     }
   };
 
-  if (error) return <p className="error-message">{error}</p>;
-
   return (
     <div className="job-table-container">
+      <div className={`error-message ${error ? 'show' : ''}`}>
+        {error}
+      </div>
+      {successMessage && (
+        <div className="success-message">
+          <span className="success-icon">&#10004;</span> {successMessage}
+        </div>
+      )}
       <div className="job-table">
         <h2>İş Tablosu</h2>
         <div className="table-wrapper">
@@ -56,6 +96,7 @@ function JobTable() {
                 <th>Oluşturma Tarihi</th>
                 <th>Detay</th>
                 <th>Fotoğraflar</th>
+                <th>Sil</th>
               </tr>
             </thead>
             <tbody>
@@ -112,12 +153,20 @@ function JobTable() {
                           onClick={() => handleImageClick(url)}
                           className="image-button"
                         >
-                          Fotoğraf {index + 1}
+                          Detaylar Fotoğrafı {index + 1}
                         </button>
                       ))
                     ) : (
                       <p>Fotoğraf yok</p>
                     )}
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleDeleteJob(job)}
+                      className="delete-button"
+                    >
+                      Sil
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaCheckCircle } from 'react-icons/fa'; // Yeşil tik ikonu
 import './UsersPage.css';
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate hook'u kullanarak yönlendirme işlemlerini yapacağız
+  const [successMessage, setSuccessMessage] = useState(null); // Başarı mesajı için state
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token'); // Token'ı al
+        const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:5000/users', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setUsers(response.data); // Kullanıcıları state'e aktar
+        setUsers(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Kullanıcılar alınırken bir hata oluştu:', error);
@@ -30,16 +32,39 @@ function UsersPage() {
     fetchUsers();
   }, []);
 
+  const deleteUser = async (id, name) => {
+    if (window.confirm('Gerçekten silmek istiyor musunuz?')) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`http://localhost:5000/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(users.filter(user => user.id !== id)); // Kullanıcıyı local state'ten çıkar
+        setSuccessMessage(`Kullanıcı ${id} (${name}) başarıyla silindi.`);
+        console.log(`${id} idli ${name} kullanıcısı silindi.`);
+        
+        // 5 saniye sonra başarı mesajını kaldır
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
+      } catch (error) {
+        console.error('Kullanıcı silinirken bir hata oluştu:', error);
+        setError('Kullanıcı silinemedi');
+      }
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        navigate('/home'); // 'Escape' tuşuna basıldığında yönlendirme işlemi
+        navigate('/home');
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
-    // Cleanup event listener
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -50,6 +75,12 @@ function UsersPage() {
 
   return (
     <div className="users-page">
+      {successMessage && (
+        <div className="success-message">
+          <FaCheckCircle className="success-icon" />
+          {successMessage}
+        </div>
+      )}
       <h1>Kullanıcılar</h1>
       <div className="user-container">
         {users.map(user => (
@@ -65,13 +96,17 @@ function UsersPage() {
                 </a>
               </div>
               <p className="user-status">{user.isAdmin ? 'Durum: Admin' : 'Durum: Kullanıcı'}</p>
+              {!user.isAdmin && ( // Admin kullanıcıları silemeyiz
+                <button className="delete-button" onClick={() => deleteUser(user.id, user.name)}>
+                  Kullanıcıyı Sil
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
     </div>
   );
-  
 }
 
 export default UsersPage;
