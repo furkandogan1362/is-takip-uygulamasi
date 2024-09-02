@@ -7,6 +7,13 @@ function JobTable() {
   const [error, setError] = useState(null);
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [updateForm, setUpdateForm] = useState({
+    title: '',
+    status: '',
+    details: '',
+    newImages: [],
+  });
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -73,6 +80,81 @@ function JobTable() {
     }
   };
 
+  const handleJobClick = (job) => {
+    setSelectedJob(job);
+    setUpdateForm({
+      title: job.title,
+      status: job.status,
+      details: job.details,
+      newImages: [],
+    });
+  };
+
+  const handleUpdateChange = (e) => {
+    const { name, value } = e.target;
+    setUpdateForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setUpdateForm((prev) => ({
+      ...prev,
+      newImages: [...e.target.files],
+    }));
+  };
+
+  const handleUpdateJob = async () => {
+    if (!selectedJob) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
+      formData.append('title', updateForm.title);
+      formData.append('status', updateForm.status);
+      formData.append('details', updateForm.details);
+      updateForm.newImages.forEach((file, index) => {
+        formData.append(`newImages`, file);
+      });
+
+      const response = await axios.put(`http://localhost:5000/tasks/${selectedJob.id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setSuccessMessage('Görev başarıyla güncellendi');
+      // Güncellenmiş görevleri yeniden çek
+      const updatedJobsResponse = await axios.get('http://localhost:5000/tasks', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const updatedJobs = updatedJobsResponse.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setJobs(updatedJobs);
+
+      setSelectedJob(null);
+      setUpdateForm({
+        title: '',
+        status: '',
+        details: '',
+        newImages: [],
+      });
+
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 5000);
+    } catch (error) {
+      console.error('Sadece kendi işinizi güncelleyebilirsiniz!', error);
+      setError('Sadece kendi işinizi güncelleyebilirsiniz!');
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    }
+  };
+
   return (
     <div className="job-table-container">
       <div className={`error-message ${error ? 'show' : ''}`}>
@@ -97,6 +179,7 @@ function JobTable() {
                 <th>Detay</th>
                 <th>Fotoğraflar</th>
                 <th>Sil</th>
+                <th>Güncelle</th>
               </tr>
             </thead>
             <tbody>
@@ -146,7 +229,7 @@ function JobTable() {
                     )}
                   </td>
                   <td>
-                    {job.imageUrl.length > 0 ? (
+                    {job.imageUrl && job.imageUrl.length > 0 ? (
                       job.imageUrl.map((url, index) => (
                         <button
                           key={index}
@@ -168,12 +251,73 @@ function JobTable() {
                       Sil
                     </button>
                   </td>
+                  <td>
+                    <button
+                      onClick={() => handleJobClick(job)}
+                      className="update-button"
+                    >
+                      Güncelle
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {selectedJob && (
+        <div className="update-form">
+          <h2>Görev Güncelle</h2>
+          <label>
+            Başlık:
+            <input
+              type="text"
+              name="title"
+              value={updateForm.title}
+              onChange={handleUpdateChange}
+            />
+          </label>
+          <label>
+            Durum:
+            <select
+              name="status"
+              value={updateForm.status}
+              onChange={handleUpdateChange}
+            >
+              <option value="Yeni">Yeni</option>
+              <option value="Tamamlandı">Tamamlandı</option>
+              <option value="Silindi">Silindi</option>
+            </select>
+          </label>
+          <label>
+            Detay:
+            <textarea
+              name="details"
+              value={updateForm.details}
+              onChange={handleUpdateChange}
+            />
+          </label>
+          <label>
+            Yeni Fotoğraflar:
+            <input
+              type="file"
+              name="newImages"
+              multiple
+              onChange={handleFileChange}
+            />
+          </label>
+          <button onClick={handleUpdateJob} className="update-submit-button">
+            Güncelle
+          </button>
+          <button
+            onClick={() => setSelectedJob(null)}
+            className="update-cancel-button"
+          >
+            İptal
+          </button>
+        </div>
+      )}
     </div>
   );
 }

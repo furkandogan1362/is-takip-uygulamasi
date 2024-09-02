@@ -4,7 +4,6 @@ import './CreateTaskModal.css';
 
 function CreateTaskModal({ isOpen, onClose }) {
   const [title, setTitle] = useState('');
-  const [status, setStatus] = useState('Yeni');
   const [details, setDetails] = useState('');
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
@@ -64,7 +63,7 @@ function CreateTaskModal({ isOpen, onClose }) {
     try {
       const formData = new FormData();
       formData.append('title', title);
-      formData.append('status', status);
+      formData.append('status', 'Yeni'); // Durum her zaman 'Yeni' olarak ayarlanır
       formData.append('details', details);
       formData.append('createdBy', userInfo.id);
       formData.append('creationDate', creationDate);
@@ -108,12 +107,7 @@ function CreateTaskModal({ isOpen, onClose }) {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-          <label>Durum:</label>
-          <select value={status} onChange={(e) => setStatus(e.target.value)} required>
-            <option value="Yeni">Yeni</option>
-            <option value="Tamamlandı">Tamamlandı</option>
-            <option value="Silindi">Silindi</option>
-          </select>
+          {/* Durum seçimi kaldırıldı */}
           <label>Detay:</label>
           <textarea
             value={details}

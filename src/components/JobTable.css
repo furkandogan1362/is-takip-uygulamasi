@@ -210,3 +210,94 @@ th {
 .error-message.show {
   display: block; /* Gösterim için eklenen sınıf */
 }
+
+/* Güncelleme formu ve butonları için CSS */
+
+.update-form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.update-form h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.update-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.update-form input,
+.update-form textarea {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.update-form input[type="text"],
+.update-form input[type="url"] {
+  height: 40px;
+}
+
+.update-form textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.update-form button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.update-form button:hover {
+  background-color: #003d99;
+}
+
+.update-form .error-message,
+.update-form .success-message {
+  color: #e74c3c;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.update-form .success-message {
+  color: #155724;
+  background-color: #d4edda;
+}
+
+.update-form .error-message {
+  background-color: #f8d7da;
+}
+
+.update-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-top: 3px;
+}
+
+.update-button:hover {
+  background-color: #218838;
+}
