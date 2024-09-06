@@ -25,6 +25,9 @@ function SideMenu({ isAdmin }) {
           <div className="menu-item">
             <Link to="/jobs">İş Tablosu</Link>
           </div>
+          <div className="menu-item">
+            <Link to="/comments">Yorumlar</Link>
+          </div>
           {/* Diğer menü öğeleri buraya eklenebilir */}
         </>
       )}

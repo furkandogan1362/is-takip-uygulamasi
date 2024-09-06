@@ -1,5 +1,3 @@
-// App.js
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
@@ -9,6 +7,8 @@ import Profile from './components/Profile';
 import UsersPage from './components/UsersPage';
 import SideMenu from './components/SideMenu';
 import JobTable from './components/JobTable'; // İş tablosu bileşenini ekledik
+import CommentsTable from './components/CommentsTable'; // Yorumlar tablosu bileşenini ekledik
+import MyCommentsPage from './components/MyCommentsPage'; // Yorumlarım bileşenini ekledik
 import './App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -53,6 +53,14 @@ function App() {
             <Route 
               path="/jobs" 
               element={isLoggedIn ? <JobTable /> : <Navigate to="/" />} 
+            />
+            <Route 
+              path="/comments" 
+              element={isLoggedIn ? <CommentsTable /> : <Navigate to="/" />} 
+            />
+            <Route 
+              path="/my-comments" 
+              element={isLoggedIn ? <MyCommentsPage /> : <Navigate to="/" />} 
             />
           </Routes>
         </div>

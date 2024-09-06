@@ -20,6 +20,20 @@
     font-weight: bold;
     transition: all 0.3s ease; /* Geçiş efekti ekleme */
     border-radius: 5px;
+    
+}
+
+.header-button.yorumlarim {
+    background-color: #4caf50; /* Yeşil renk */
+}
+
+.header-button.yorumlarim:hover {
+    background-color: #45a049; /* Hover rengini koyulaştır */
+}
+
+.header-button.yorumlarim:active {
+    transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
 }
 
 .header-button:hover {
@@ -59,6 +73,26 @@
 }
 
 .header-button-logout:active {
+    transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
+}
+
+.header-button-yorum {
+    background-color: #4caf50; /* Yeşil renk */
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s ease; /* Geçiş efekti ekleme */
+}
+
+.header-button-yorum:hover {
+    background-color: #45a049; /* Hover rengini koyulaştır */
+}
+
+.header-button-yorum:active {
     transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
 }

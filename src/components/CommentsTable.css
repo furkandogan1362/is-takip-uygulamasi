@@ -1,0 +1,113 @@
+/* CommentsTable.css */
+
+/* Genel Konteyner */
+.comments-table-container {
+    padding: 20px;
+    position: relative;
+  }
+  
+  /* Sabit Başlık */
+  .comments-table-container h2 {
+    top: 20px; /* Üstten ne kadar boşluk bırakmak isterseniz */
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    z-index: 10; /* Diğer içeriklerin üstünde olmasını sağlar */
+  }
+  
+  /* Tablo Wrapper ve Form Konteyneri */
+  .table-wrapper, .comment-form {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+  
+  /* Tablo ve Form Konteyneri Tek Scroll Alanında */
+  .comments-table-container {
+    max-height: calc(100vh - 120px); /* Bu, form ve başlığın toplam yüksekliğine bağlı olarak ayarlanabilir */
+    overflow-y: auto;
+  }
+  
+  /* Tablo */
+  .comments-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* Tablo Başlıkları ve Hücreler */
+  .comments-table th, .comments-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  /* Tablo Başlık Arka Plan Rengi */
+  .comments-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  /* Detaylar Hücresi */
+  .details {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* Fotoğraf Butonları */
+  .image-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  /* Yorum Formu Konteyneri */
+  .comment-form {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+  /* Form Başlıkları */
+  .comment-form h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  /* Form Etiketleri */
+  .comment-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  /* Form Girdileri */
+  .comment-form input[type="text"], 
+  .comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px; /* Etiketler ve girişler arasındaki boşluk */
+  }
+  
+  /* Form Gönder Butonu */
+  .comment-submit-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* Form Butonlarına Hover Efekti */
+  .comment-submit-button:hover {
+    background-color: #421de4;
+  }
+  

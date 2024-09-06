@@ -1,0 +1,108 @@
+.my-comments-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.my-comments-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.loading-message {
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+}
+
+.comment-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.comment-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: calc(25% - 15px);
+    min-width: 250px;
+    max-width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.comment-card-inner {
+    padding: 15px;
+}
+
+.comment-card.active {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+}
+
+.comment-card.passive {
+    border-color: #f44336;
+    background-color: #fce4ec;
+}
+
+.comment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.comment-card h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #444;
+}
+
+.comment-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.comment-card strong {
+    color: #333;
+}
+
+.comment-content {
+    position: relative;
+    max-height: 100px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.comment-content.expanded {
+    max-height: none;
+}
+
+.toggle-expand {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.toggle-expand:hover {
+    text-decoration: underline;
+}
+
