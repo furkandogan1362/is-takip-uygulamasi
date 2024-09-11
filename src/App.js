@@ -9,6 +9,7 @@ import SideMenu from './components/SideMenu';
 import JobTable from './components/JobTable'; // İş tablosu bileşenini ekledik
 import CommentsTable from './components/CommentsTable'; // Yorumlar tablosu bileşenini ekledik
 import MyCommentsPage from './components/MyCommentsPage'; // Yorumlarım bileşenini ekledik
+import AllCommentsPage from './components/AllCommentsPage'; // Tüm yorumlar bileşenini ekledik
 import './App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -61,6 +62,10 @@ function App() {
             <Route 
               path="/my-comments" 
               element={isLoggedIn ? <MyCommentsPage /> : <Navigate to="/" />} 
+            />
+            <Route 
+              path="/all-comments" 
+              element={isLoggedIn && isAdmin ? <AllCommentsPage /> : <Navigate to="/home" />} 
             />
           </Routes>
         </div>

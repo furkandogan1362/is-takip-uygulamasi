@@ -88,7 +88,7 @@
   /* Form Girdileri */
   .comment-form input[type="text"], 
   .comment-form textarea {
-    width: 100%;
+    width: 98%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;

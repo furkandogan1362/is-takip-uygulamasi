@@ -103,6 +103,34 @@
 }
 
 .toggle-expand:hover {
-    text-decoration: underline;
+    text-decoration:underline;
+}
+
+.delete-comment {
+    background: none;
+    border: 1px solid #f44336;
+    color: #f44336;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-top: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.delete-comment:hover {
+    background-color: #f44336;
+    color: white;
+}
+
+.success-message {
+    color: #4caf50;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.success-icon {
+    margin-right: 5px;
+    font-size: 20px;
 }
 

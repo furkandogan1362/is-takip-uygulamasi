@@ -19,6 +19,10 @@ function Header({ isLoggedIn, isAdmin, onLogout }) {
     navigate('/my-comments'); // Sayfaya yönlendirme
   };
 
+  const handleViewAllComments = () => {
+    navigate('/all-comments'); // Tüm yorumlar sayfasına yönlendirme
+  };
+
   return (
     <header className="header">
       <Link to="/home" className="header-button">Ana Sayfa</Link>
@@ -27,9 +31,15 @@ function Header({ isLoggedIn, isAdmin, onLogout }) {
           <>
             <ProfileButton />
             <CreateTaskButton onClick={handleOpenModal} /> {/* İş oluşturma butonu */}
-            <button className="header-button-yorum" onClick={handleViewMyComments}>
-              Yorumlarım
-            </button>
+            {isAdmin ? (
+              <button className="header-button-all-comments" onClick={handleViewAllComments}>
+                Tüm Yorumlar
+              </button>
+            ) : (
+              <button className="header-button-my-comments" onClick={handleViewMyComments}>
+                Yorumlarım
+              </button>
+            )}
             <button className="header-button-logout" onClick={onLogout}>Çıkış Yap</button>
           </>
         )}

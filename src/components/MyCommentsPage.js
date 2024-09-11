@@ -7,6 +7,7 @@ function MyCommentsPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedComments, setExpandedComments] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -41,6 +42,25 @@ function MyCommentsPage() {
     return text.slice(0, maxLength) + '...';
   };
 
+  const deleteComment = async (commentId) => {
+    if (window.confirm('Bu yorumu gerçekten silmek istiyor musunuz?')) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`http://localhost:5000/comments/${commentId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setComments(comments.filter(comment => comment.commentId !== commentId));
+        setSuccessMessage('Yorum başarıyla silindi.');
+        setTimeout(() => setSuccessMessage(''), 3000); // 3 saniye sonra mesajı temizle
+      } catch (error) {
+        console.error('Yorum silinirken hata oluştu:', error);
+        setError('Yorum silinirken hata oluştu');
+      }
+    }
+  };
+
   if (loading) {
     return <div className="loading-message">Yorumlar yükleniyor...</div>;
   }
@@ -48,6 +68,12 @@ function MyCommentsPage() {
   return (
     <div className="my-comments-page">
       <div className="my-comments-header">Yorumlarım</div>
+      {successMessage && (
+        <div className="success-message">
+          <span className="success-icon">✔️</span>
+          {successMessage}
+        </div>
+      )}
       {error && <div className="error-message">{error}</div>}
       {comments.length > 0 ? (
         <div className="comment-grid">
@@ -75,6 +101,12 @@ function MyCommentsPage() {
                     </button>
                   )}
                 </div>
+                <button 
+                  className="delete-button" 
+                  onClick={() => deleteComment(comment.commentId)}
+                >
+                  Sil
+                </button>
               </div>
             </div>
           ))}

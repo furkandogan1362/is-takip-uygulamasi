@@ -67,7 +67,67 @@ router.get('/my-comments', verifyToken, (req, res) => {
   });
 });
 
+// Yorum silme
+router.delete('/comments/:id', verifyToken, (req, res) => {
+  const commentId = req.params.id;
+  const userId = req.user.id;
+
+  // Yorumun mevcut olup olmadığını kontrol et
+  const findCommentSql = 'SELECT created_by FROM comments WHERE id = ?';
+
+  db.query(findCommentSql, [commentId], (err, results) => {
+    if (err) {
+      return res.status(500).send('Yorum bulunamadı');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('Yorum bulunamadı');
+    }
+
+    const creatorId = results[0].created_by;
+
+    // Admin ve yorumun sahibi kontrolü
+    if (userId !== creatorId && !req.user.isAdmin) {
+      return res.status(403).send('Bu yorumu silme yetkiniz yok');
+    }
+
+    // Yorum silme SQL sorgusu
+    const deleteCommentSql = 'DELETE FROM comments WHERE id = ?';
+
+    db.query(deleteCommentSql, [commentId], (err) => {
+      if (err) {
+        return res.status(500).send('Yorum silinirken hata oluştu');
+      }
+
+      res.send('Yorum başarıyla silindi');
+    });
+  });
+});
 
 
+// Tüm yorumları listeleme
+router.get('/all-comments', verifyToken, (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).send('Bu sayfayı görüntüleme yetkiniz yok.');
+  }
+
+  const sql = `
+    SELECT c.id AS commentId, c.title AS commentTitle, c.content AS commentContent, c.created_at AS commentCreatedAt, c.status AS commentStatus,
+           t.id AS taskId, t.title AS taskTitle, u1.name AS taskCreatorName,
+           u2.name AS commentAuthorName
+    FROM comments c
+    JOIN tasks t ON c.job_id = t.id
+    JOIN users u1 ON t.created_by = u1.id
+    JOIN users u2 ON c.created_by = u2.id
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Yorumlar alınırken hata oluştu:', err);
+      return res.status(500).send('Yorumlar alınırken hata oluştu');
+    }
+    res.json(results);
+  });
+});
 
 module.exports = router;

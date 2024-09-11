@@ -1,0 +1,180 @@
+.all-comments-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-left: 270px; /* Side menu'nun genişliği + ekstra boşluk */
+    max-width: calc(100% - 270px); /* Sayfanın maksimum genişliği */
+    padding-top: 60px; /* Üstten boşluk ekledik, başlık yüksekliği kadar */
+    position: relative; /* İçerik akışını belirler */
+    padding-right:400px; /* Sol boşluk ekledik */
+
+}
+
+.all-comments-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 20px; /* Üst ve alt kenar boşluğunu arttırdık */
+    padding: 0; /* Padding'i kaldırdık */
+    top: 0; /* Üst kısımdan sıfır boşluk bırakır */
+    margin-top: 20px;
+    z-index: 1000; /* Diğer öğelerin üzerinde kalmasını sağlar */
+}
+
+.comment-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center; /* Merkezi hizalama */
+    padding-bottom: 20px; /* Alt kısımda boşluk bırakır */
+}
+
+.comment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0; /* Padding'i kaldırdık */
+    width: 100%;
+    max-width: 1300px; /* Maksimum genişliği biraz azalttık */
+    margin-top: 20px; /* Başlığın altındaki boşluğu artırır */
+}
+
+.error-message, .success-message, .loading-message {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: green;
+}
+
+.loading-message {
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+}
+
+.comment-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    max-height: 400px; /* Maksimum yükseklik ekledik */
+    position: relative; /* İçerik hizalamasını kontrol etmek için */
+}
+
+.comment-card .comment-content {
+    flex-grow: 1; /* İçerik kısmını genişletir */
+}
+
+
+.comment-card.active {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+}
+
+.comment-card.passive {
+    border-color: #f44336;
+    background-color: #fce4ec;
+}
+
+.comment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.comment-card h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #444;
+}
+
+.comment-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.comment-card strong {
+    color: #333;
+}
+
+.comment-content {
+    position: relative;
+}
+
+.toggle-content {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    margin-top: 5px;
+    text-decoration: underline;
+}
+
+.toggle-content:hover {
+    color: #0056b3;
+}
+
+.delete-button-wrapper {
+    display: flex;
+    justify-content: center; /* Butonu ortalar */
+    margin-top: 10px; /* Üstten boşluk ekler */
+}
+
+.remove-button {
+    position: absolute; /* Konumu mutlak olarak ayarlar */
+    bottom: 15px; /* Alt kenara 15px uzaklıkta sabitler */
+    right: 15px; /* Sağ kenara 15px uzaklıkta sabitler */
+    margin-right: 80px;
+    cursor: pointer;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    display: block; /* Her butonun yeni satıra geçmesini sağlar */
+}
+
+.delete-button:hover {
+    background-color: #d32f2f;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #0056b3;
+}
