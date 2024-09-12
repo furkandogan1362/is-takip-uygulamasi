@@ -28,7 +28,7 @@ function SideMenu({ isAdmin }) {
           <div className="menu-item">
             <Link to="/comments">Yorumlar</Link>
           </div>
-          {/* Diğer menü öğeleri buraya eklenebilir */}
+          
         </>
       )}
     </div>

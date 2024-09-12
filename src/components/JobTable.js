@@ -15,6 +15,9 @@ function JobTable() {
     newImages: [],
   });
 
+  const [searchTerm, setSearchTerm] = useState(''); // Search term state
+  const [filterStatus, setFilterStatus] = useState(''); // Filter status state
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -35,6 +38,14 @@ function JobTable() {
     fetchJobs();
   }, []);
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterStatus(e.target.value);
+  };
+
   const handleImageClick = (imageUrl) => {
     window.open(`http://localhost:5000${imageUrl}`, '_blank');
   };
@@ -54,7 +65,7 @@ function JobTable() {
         });
 
         setSuccessMessage(response.data.message);
-        setJobs(jobs.filter(j => j.id !== job.id));
+        setJobs(jobs.filter((j) => j.id !== job.id));
 
         setTimeout(() => {
           setSuccessMessage(null);
@@ -114,8 +125,8 @@ function JobTable() {
       formData.append('title', updateForm.title);
       formData.append('status', updateForm.status);
       formData.append('details', updateForm.details);
-      updateForm.newImages.forEach((file, index) => {
-        formData.append(`newImages`, file);
+      updateForm.newImages.forEach((file) => {
+        formData.append('newImages', file);
       });
 
       const response = await axios.put(`http://localhost:5000/tasks/${selectedJob.id}`, formData, {
@@ -126,7 +137,6 @@ function JobTable() {
       });
 
       setSuccessMessage('Görev başarıyla güncellendi');
-      // Güncellenmiş görevleri yeniden çek
       const updatedJobsResponse = await axios.get('http://localhost:5000/tasks', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -155,6 +165,13 @@ function JobTable() {
     }
   };
 
+  const filteredJobs = jobs
+    .filter((job) =>
+      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.details.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((job) => (filterStatus ? job.status === filterStatus : true));
+
   return (
     <div className="job-table-container">
       <div className={`error-message ${error ? 'show' : ''}`}>
@@ -167,6 +184,20 @@ function JobTable() {
       )}
       <div className="job-table">
         <h2>İş Tablosu</h2>
+        <div className="search-filter">
+          <input
+            type="text"
+            placeholder="Başlık veya Detaylara göre ara"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <select value={filterStatus} onChange={handleFilterChange}>
+            <option value="">Tüm Durumlar</option>
+            <option value="Yeni">Yeni</option>
+            <option value="Tamamlandı">Tamamlandı</option>
+            <option value="Silindi">Silindi</option>
+          </select>
+        </div>
         <div className="table-wrapper">
           <table>
             <thead>
@@ -183,7 +214,7 @@ function JobTable() {
               </tr>
             </thead>
             <tbody>
-              {jobs.map((job) => (
+              {filteredJobs.map((job) => (
                 <tr
                   key={job.id}
                   className={
@@ -206,21 +237,25 @@ function JobTable() {
                       hour: '2-digit',
                       minute: '2-digit',
                       second: '2-digit',
-                      hour12: false
+                      hour12: false,
                     })}
                   </td>
                   <td className="details">
                     {expandedJobId === job.id ? (
                       <div>
                         {job.details}
-                        <button onClick={() => toggleExpand(job.id)} className="expand-button">Daralt</button>
+                        <button onClick={() => toggleExpand(job.id)} className="expand-button">
+                          Daralt
+                        </button>
                       </div>
                     ) : (
                       <div>
                         {job.details.length > 100 ? (
                           <div>
                             {job.details.substring(0, 100)}...
-                            <button onClick={() => toggleExpand(job.id)} className="expand-button">Daha Fazla Gör</button>
+                            <button onClick={() => toggleExpand(job.id)} className="expand-button">
+                              Daha Fazla Gör
+                            </button>
                           </div>
                         ) : (
                           job.details
@@ -244,18 +279,12 @@ function JobTable() {
                     )}
                   </td>
                   <td>
-                    <button
-                      onClick={() => handleDeleteJob(job)}
-                      className="delete-button"
-                    >
+                    <button onClick={() => handleDeleteJob(job)} className="delete-button">
                       Sil
                     </button>
                   </td>
                   <td>
-                    <button
-                      onClick={() => handleJobClick(job)}
-                      className="update-button"
-                    >
+                    <button onClick={() => handleJobClick(job)} className="update-button">
                       Güncelle
                     </button>
                   </td>
@@ -310,10 +339,7 @@ function JobTable() {
           <button onClick={handleUpdateJob} className="update-submit-button">
             Güncelle
           </button>
-          <button
-            onClick={() => setSelectedJob(null)}
-            className="update-cancel-button"
-          >
+          <button onClick={() => setSelectedJob(null)} className="update-cancel-button">
             İptal
           </button>
         </div>

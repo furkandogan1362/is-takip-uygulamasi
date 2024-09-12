@@ -96,3 +96,43 @@
     transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
 }
+
+.header-button-my-comments {
+    background-color: #4caf50; /* Yeşil renk */
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s ease; /* Geçiş efekti ekleme */
+}
+
+.header-button-my-comments:hover {
+    background-color: #45a049; /* Hover rengini koyulaştır */
+}
+
+.header-button-my-comments:active {
+    transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
+}
+
+.header-button-all-comments {
+    background-color: #4caf50; /* Yeşil renk */
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s ease; /* Geçiş efekti ekleme */
+}
+
+.header-button-all-comments:hover {
+    background-color: #45a049; /* Hover rengini koyulaştır */
+}
+
+.header-button-all-comments:active {
+    transform: scale(0.98); /* Buton basıldığında hafifçe küçülür */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
+}

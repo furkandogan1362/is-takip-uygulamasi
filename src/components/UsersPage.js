@@ -90,11 +90,13 @@ function UsersPage() {
               <p className="id">ID: {user.id}</p>
               <p className="name">İsim: {user.name}</p>
               <p className="email">E-mail: {user.email}</p>
-              <div className="cv">
-                <a href={`http://localhost:5000${user.cvUrl}`} target="_blank" rel="noopener noreferrer" className="cv-link">
-                  CV'yi Gör
-                </a>
-              </div>
+              {!user.isAdmin && ( // Admin kullanıcıları için CV linki gösterme
+                <div className="cv">
+                  <a href={`http://localhost:5000${user.cvUrl}`} target="_blank" rel="noopener noreferrer" className="cv-link">
+                    CV'yi Gör
+                  </a>
+                </div>
+              )}
               <p className="user-status">{user.isAdmin ? 'Durum: Admin' : 'Durum: Kullanıcı'}</p>
               {!user.isAdmin && ( // Admin kullanıcıları silemeyiz
                 <button className="delete-button" onClick={() => deleteUser(user.id, user.name)}>

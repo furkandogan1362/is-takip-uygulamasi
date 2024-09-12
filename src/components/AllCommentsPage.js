@@ -54,7 +54,7 @@ function AllCommentsPage() {
       });
       setComments(comments.filter(comment => comment.commentId !== commentId));
       setSuccessMessage('Yorum başarıyla silindi.');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setTimeout(() => setSuccessMessage(null), 5000);
     } catch (error) {
       console.error('Yorum silinirken hata oluştu:', error);
       setError('Yorum silinirken hata oluştu');
@@ -100,18 +100,28 @@ function AllCommentsPage() {
                   <p><strong>Yorum Tarihi:</strong> {new Date(comment.commentCreatedAt).toLocaleString()}</p>
                   <p><strong>Durum:</strong> {comment.commentStatus}</p>
                   <div className="comment-content">
-                    <p><strong>Yorum İçeriği:</strong> 
-                      {expandedComments[comment.commentId] 
-                        ? comment.commentContent 
-                        : comment.commentContent.slice(0, 100) + '...'}
-                    </p>
-                    {comment.commentContent.length > 100 && (
-                      <button 
-                        className="toggle-content"
-                        onClick={() => toggleCommentExpansion(comment.commentId)}
-                      >
-                        {expandedComments[comment.commentId] ? 'Daha Az' : 'Daha Fazla'}
-                      </button>
+                    {expandedComments[comment.commentId] ? (
+                      <div>
+                        <p><strong>Yorum İçeriği:</strong> {comment.commentContent}</p>
+                        <button 
+                          className="toggle-content"
+                          onClick={() => toggleCommentExpansion(comment.commentId)}
+                        >
+                          Daha Az
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p><strong>Yorum İçeriği:</strong> {comment.commentContent.slice(0, 50) }</p>
+                        {comment.commentContent.length > 100 && (
+                          <button 
+                            className="toggle-content"
+                            onClick={() => toggleCommentExpansion(comment.commentId)}
+                          >
+                            Daha Fazla
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>

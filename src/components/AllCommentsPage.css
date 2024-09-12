@@ -110,18 +110,25 @@
 }
 
 .comment-content {
-    position: relative;
+    max-width: 250px;
+    max-height: 100px; /* Hücre yüksekliğini sınırla */
+    overflow-y: auto; /* Dikey kaydırma çubuğu */
+    overflow-wrap: break-word; /* Uzun kelimeleri sarmalar */
+    word-wrap: break-word; /* Geniş tarayıcı desteği için */
+    white-space: normal; /* Normal sarmalama */
+    padding-right: 10px; /* İçeriğin diğer hücreye taşmaması için boşluk */
 }
 
 .toggle-content {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 0;
-    margin-top: 5px;
-    text-decoration: underline;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 5px;
+  margin-left: 10px; /* Butonu metinden sağa kaydırır */
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .toggle-content:hover {
@@ -149,7 +156,7 @@
     display: block; /* Her butonun yeni satıra geçmesini sağlar */
 }
 
-.delete-button:hover {
+.delete-button-wrapper:hover {
     background-color: #d32f2f;
 }
 

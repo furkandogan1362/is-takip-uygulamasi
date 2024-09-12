@@ -4,13 +4,19 @@ import './CommentsTable.css';
 
 function CommentsTable() {
   const [jobs, setJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null); // Başarı mesajı için eklenen state
+  const [success, setSuccess] = useState(null);
   const [newComment, setNewComment] = useState({
     jobId: '',
     title: '',
     content: ''
   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('Yeni');
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [expandedJobId, setExpandedJobId] = useState(null);
+
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -21,9 +27,9 @@ function CommentsTable() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log('API yanıtı:', response.data); // API yanıtını kontrol edin
         const sortedJobs = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setJobs(sortedJobs);
+        setFilteredJobs(sortedJobs.filter(job => job.status === 'Yeni'));
       } catch (error) {
         console.error('İş tablosu verileri alınamadı:', error);
         setError('İş tablosu verileri alınamadı');
@@ -32,6 +38,22 @@ function CommentsTable() {
 
     fetchJobs();
   }, []);
+
+  const handleExpandClick = (jobId) => {
+    setExpandedJobId(expandedJobId === jobId ? null : jobId);
+  };
+
+  useEffect(() => {
+    // Filtreleme işlemi
+    const filterJobs = () => {
+      let filtered = jobs.filter(job => job.status === filterStatus);
+      if (searchTerm) {
+        filtered = filtered.filter(job => job.title.toLowerCase().includes(searchTerm.toLowerCase()));
+      }
+      setFilteredJobs(filtered);
+    };
+    filterJobs();
+  }, [searchTerm, filterStatus, jobs]);
 
   const handleCommentChange = (e) => {
     const { name, value } = e.target;
@@ -52,13 +74,11 @@ function CommentsTable() {
         },
       });
 
-      // Yorum eklendikten sonra job'ı yeniden al
       const updatedJobsResponse = await axios.get('http://localhost:5000/tasks', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log('Güncellenmiş API yanıtı:', updatedJobsResponse.data); // Güncellenmiş yanıtı kontrol edin
       const updatedJobs = updatedJobsResponse.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setJobs(updatedJobs);
 
@@ -68,7 +88,6 @@ function CommentsTable() {
         content: ''
       });
 
-      // Başarı mesajını ayarla
       setSuccess('Yorum başarıyla eklendi');
       setTimeout(() => {
         setSuccess(null);
@@ -82,6 +101,15 @@ function CommentsTable() {
     }
   };
 
+  const togglePopover = () => {
+    setIsPopoverOpen(prev => !prev);
+  };
+
+  const handleFilterChange = (status) => {
+    setFilterStatus(status);
+    togglePopover();
+  };
+
   return (
     <div className="comments-table-container">
       {/* Hata ve başarı mesajları */}
@@ -91,6 +119,28 @@ function CommentsTable() {
       <div className={`success-message ${success ? 'show' : ''}`}>
         {success}
       </div>
+      
+      {/* Arama ve Filtre Butonu */}
+      <div className="search-filter-container">
+        <input
+          type="text"
+          placeholder="Başlıkla ara..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+        <button className="filter-button" onClick={togglePopover}>
+          Filtrele
+        </button>
+        {isPopoverOpen && (
+          <div className="filter-popover">
+            <button onClick={() => handleFilterChange('Yeni')}>Yeni</button>
+            <button onClick={() => handleFilterChange('Tamamlandı')}>Tamamlandı</button>
+            <button onClick={() => handleFilterChange('Silindi')}>Silinen</button>
+          </div>
+        )}
+      </div>
+
       <div className="comments-table">
         <h2>İş Tablosu ve Yorumlar</h2>
         <div className="table-wrapper">
@@ -104,12 +154,12 @@ function CommentsTable() {
                 <th>Oluşturma Tarihi</th>
                 <th>Detay</th>
                 <th>Fotoğraflar</th>
-                <th>Yorumlar</th> {/* Yorumlar sütunu başlığı */}
+                <th>Yorumlar</th>
               </tr>
             </thead>
             <tbody>
-              {jobs.length > 0 ? (
-                jobs.map((job) => (
+              {filteredJobs.length > 0 ? (
+                filteredJobs.map((job) => (
                   <tr
                     key={job.id}
                     className={
@@ -135,9 +185,27 @@ function CommentsTable() {
                         hour12: false
                       })}
                     </td>
-                    <td className="details">
-                      {job.details}
+                    <td className="details-comm">
+                      {expandedJobId === job.id ? (
+                        <div>
+                          {job.details}
+                          <button onClick={() => handleExpandClick(job.id)} className="expand-button-comm">Daralt</button>
+                        </div>
+                      ) : (
+                        <div>
+                          {job.details.length > 100 ? (
+                            <div>
+                              {job.details.substring(0, 100)}...
+                              <button onClick={() => handleExpandClick(job.id)} className="expand-button-comm">Daha Fazla Gör</button>
+                            </div>
+                          ) : (
+                            job.details
+                          )}
+                        </div>
+                      )}
                     </td>
+
+
                     <td>
                       {job.imageUrl && job.imageUrl.length > 0 ? (
                         job.imageUrl.map((url, index) => (
@@ -164,12 +232,13 @@ function CommentsTable() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8">Yükleniyor...</td>
+                  <td colSpan="8">Filtreye uygun iş bulunamadı!...</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
         {/* Yorum ekleme formu */}
         <div className="comment-form">
           <h2>Yorum Ekle</h2>

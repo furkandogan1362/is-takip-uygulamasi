@@ -112,18 +112,26 @@ router.post('/upload-profile-photo', verifyToken, uploadProfileCv.single('photo'
     });
   });
   
+
   // Kullanıcıları listeleme
   router.get('/users', verifyToken, (req, res) => {
-    if (!req.user.isAdmin) {
-      return res.status(403).send('Yetkisiz');
-    }
+    const sql = `
+      SELECT 
+        id,
+        name,
+        email,
+        isAdmin,
+        photoUrl,
+        cvUrl
+      FROM users
+    `;
   
-    const sql = 'SELECT id, name, email, photoUrl, cvUrl FROM users';
     db.query(sql, (err, results) => {
       if (err) {
-        console.error('Veri çekme hatası:', err);
-        return res.status(500).send('Kullanıcılar alınamadı');
+        console.error('Kullanıcılar alınırken hata oluştu:', err);
+        return res.status(500).send('Kullanıcılar alınırken hata oluştu');
       }
+  
       res.json(results);
     });
   });
