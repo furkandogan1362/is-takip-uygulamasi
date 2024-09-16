@@ -123,11 +123,12 @@
 
 /* Arama Alanı */
 .search-input {
-  width: 300px;
+  width: 1000px;
   padding: 8px;
   margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  
 }
 
 /* Filtre Butonu */
@@ -135,7 +136,7 @@
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 50px;
   cursor: pointer;
   border-radius: 4px;
 }
@@ -147,14 +148,14 @@
 
 /* Filtre Popover */
 .filter-popover {
-  position: absolute;
+  position: relative;
   background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 10px;
+  padding: 23px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  top: 62px;
-  left: 412px;
+  top: 90px;
+  right: 140px;
 }
 
 .filter-popover button {
@@ -167,6 +168,8 @@
   font-size: 14px;
   text-align: left;
   width: 100%;
+  
+  
 }
 
 .filter-popover button:hover {

@@ -19,7 +19,7 @@ function Profile() {
         },
       })
       .then(response => {
-        console.log('Profile Data:', response.data); // Burayı kontrol edin
+        console.log('Profile Data:', response.data);
         setUserInfo(response.data);
       })
       .catch(error => {
@@ -80,7 +80,7 @@ function Profile() {
       setUserInfo(prevState => ({
         ...prevState,
         cvUrl: response.data.cvUrl,
-        cvName: file.name // Dosya adını kaydediyoruz
+        cvName: file.name
       }));
       setCvError(null);
     })
@@ -128,17 +128,19 @@ function Profile() {
         <label htmlFor="file-input" className="upload-button">Fotoğraf Yükle</label>
         {uploadError && <p className="error-message">{uploadError}</p>}
       </div>
-      <div className="cv-upload">
-        <div className="buttons-container">
-          <input type="file" id="cv-input" accept="application/pdf" onChange={handleCvChange} />
-          <label htmlFor="cv-input" className="upload-button">CV Yükle</label>
-          {userInfo.cvUrl && (
-            <button className="upload-button" onClick={handleCvDownload}>CV'nizi görün</button>
-          )}
+      {!userInfo.isAdmin && (
+        <div className="cv-upload">
+          <div className="buttons-container">
+            <input type="file" id="cv-input" accept="application/pdf" onChange={handleCvChange} />
+            <label htmlFor="cv-input" className="upload-button">CV Yükle</label>
+            {userInfo.cvUrl && (
+              <button className="upload-button" onClick={handleCvDownload}>CV'nizi görün</button>
+            )}
+          </div>
+          {cvError && <p className="error-message">{cvError}</p>}
+          <p className="note-message">Sadece PDF seçiniz.</p>
         </div>
-        {cvError && <p className="error-message">{cvError}</p>}
-        <p className="note-message">Sadece PDF seçiniz.</p>
-      </div>
+      )}
       <div className="profile-details">
         <div className="profile-item">
           <span className="profile-label">Ad:</span>
