@@ -1,0 +1,58 @@
+DATABASE KODLARI
+
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `isAdmin` tinyint(1) DEFAULT '0',
+  `photoUrl` varchar(255) DEFAULT NULL,
+  `cvUrl` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+)
+
+
+CREATE TABLE `tasks` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `status` enum('Yeni','Tamamlandı','Silindi') DEFAULT 'Yeni',
+  `created_by` int NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `details` text,
+  `imageUrl` varchar(255) DEFAULT NULL,
+  `comments_list` json DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`),
+  CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`)
+)
+
+CREATE TABLE `comments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `job_id` int NOT NULL,
+  `created_by` int NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('Aktif','Pasif') DEFAULT 'Aktif',
+  PRIMARY KEY (`id`),
+  KEY `job_id` (`job_id`),
+  KEY `created_by` (`created_by`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `tasks` (`id`),
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`)
+)
+
+CREATE TABLE `task_users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `task_id` int NOT NULL,
+  `from_user` int NOT NULL,
+  `to_user` int NOT NULL,
+  `info` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `task_id` (`task_id`),
+  KEY `from_user` (`from_user`),
+  KEY `to_user` (`to_user`),
+  CONSTRAINT `task_users_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`),
+  CONSTRAINT `task_users_ibfk_2` FOREIGN KEY (`from_user`) REFERENCES `users` (`id`),
+  CONSTRAINT `task_users_ibfk_3` FOREIGN KEY (`to_user`) REFERENCES `users` (`id`)
+);
